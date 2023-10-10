@@ -1,0 +1,13 @@
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <h2>Upload Images</h2>
+    {{ form.blog_images.management_form }}
+    {% for img_form in form.blog_images %}
+        {{ img_form.as_p }}
+    {% endfor %}
+    
+    <input type="submit" value="Create Blog">
+</form>
+
