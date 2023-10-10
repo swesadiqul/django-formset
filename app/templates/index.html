@@ -1,13 +1,68 @@
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    
-    <h2>Upload Images</h2>
-    {{ form.blog_images.management_form }}
-    {% for img_form in form.blog_images %}
-        {{ img_form.as_p }}
-    {% endfor %}
-    
-    <input type="submit" value="Create Blog">
-</form>
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-sm-11 col-md-8 col-lg-6 shadow p-3">
+            <h2>Create Blog Post</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Title -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter Title">
+                </div>
+
+                <!-- Content -->
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="6" placeholder="Enter Content"></textarea>
+                </div>
+
+                <!-- Featured Image -->
+                <div class="mb-3">
+                    <label for="featured_image" class="form-label">Featured Image</label>
+                    <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
+                </div>
+
+                <!-- Tags -->
+                <div class="mb-3">
+                    <label for="tags" class="form-label">Tags</label>
+                    <input type="text" class="form-control" id="tags" name="tags" placeholder="Enter Tags (comma-separated)">
+                </div>
+
+                <!-- Categories -->
+                <div class="mb-3">
+                    <label for="categories" class="form-label">Categories</label>
+                    <select class="form-select" id="categories" name="categories">
+                        <option value="category1">-- Select Blog Category --</option>
+                        {% for x in categories %}
+                            <option value="{{ x.id }}">{{ x.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                {{ image_formset.management_form }}
+                {{ image_formset|crispy }}
+        
+            <!-- "Add More Image" button to add more image fields -->
+            <div class="d-grid gap-2 mb-3">
+                <a href="{% url 'create_blog' %}?extra_forms={{ extra_forms|add:1 }}" class="btn btn-secondary">Add More Image</a>
+            </div>
+            
+
+                <!-- Submit Button -->
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Create Blog</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
